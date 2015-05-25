@@ -1,5 +1,9 @@
 declare var URI, hyperquest, Promise
 
+/* -----------------------------------------------------------------------------
+   API Constants
+   ----------------------------------------------------------------------------- */
+
 export const Applications = {
   ATTRIBUTE:        'clustoapi.apps.attribute',
   ENTITY:           'clustoapi.apps.entity',
@@ -27,6 +31,10 @@ export const AttributeType = {
   JSON:     'json'
 }
 
+/* -----------------------------------------------------------------------------
+   API Data Types
+   ----------------------------------------------------------------------------- */
+
 export interface Attribute {
   datatype?: string
   key?: string
@@ -43,6 +51,10 @@ export interface Entity {
   parents?: string[]
 }
 
+/* -----------------------------------------------------------------------------
+   Client and Method Options
+   ----------------------------------------------------------------------------- */
+
 export interface RequestOptions {
   mode?: string
 }
@@ -52,6 +64,10 @@ export interface FromPoolsOptions extends RequestOptions {
   driver?:   string|string[]
   type?:     string|string[]
   children?: boolean
+}
+
+export interface ByNameOptions extends RequestOptions {
+  driver?: string
 }
 
 export class Client {
@@ -114,7 +130,7 @@ export class Client {
   }
 
   /**
-   * @see https://github.com/clusto/clusto-apiserver/blob/master/clustoapi/server.py#L255
+   * @see http://clusto-apiserver.readthedocs.org/clustoapi/all.html#clustoapi.server.get_from_pools
    */
   get_from_pools(opts: string|FromPoolsOptions) {
     let options : any = { params: {} }
@@ -130,21 +146,37 @@ export class Client {
   }
 
   /**
-   * @see https://github.com/clusto/clusto-apiserver/blob/master/clustoapi/server.py#L399
+   * @see http://clusto-apiserver.readthedocs.org/clustoapi/all.html#clustoapi.server.get_by_name
    */
-  get_by_name(name: string) {
-    return this._get(`/by-name/${name}`)
+  get_by_name(name: string, opts?: ByNameOptions) {
+    let options : any = { params: {} }
+    if (opts && opts.mode) {
+      options.mode = opts.mode
+    }
+    if (opts && opts.driver) {
+      options.params.driver = opts.driver
+    }
+    return this._get(`/by-name/${name}`, options)
   }
 
   /**
-   * @see https://github.com/clusto/clusto-apiserver/blob/master/clustoapi/server.py#L474
+   * @see http://clusto-apiserver.readthedocs.org/clustoapi/all.html#clustoapi.server.get_by_names
    */
-  get_by_names() {
-    return this._get('/by-names')
+  get_by_names(names: string|string[], opts?: RequestOptions) {
+    let options : any = { params: {} }
+    if (typeof names === 'string') {
+      options.params.name = [names]
+    } else if (names instanceof Array) {
+      options.params.name = names
+    }
+    if (opts && opts.mode) {
+      options.mode = opts.mode
+    }
+    return this._get('/by-names', options)
   }
 
   /**
-   * @see https://github.com/clusto/clusto-apiserver/blob/master/clustoapi/server.py#L578
+   * @see http://clusto-apiserver.readthedocs.org/clustoapi/all.html#clustoapi.server.get_by_attr
    */
   get_by_attr() {
     return this._get('/by-attr')
