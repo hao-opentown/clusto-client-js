@@ -1,4 +1,4 @@
-declare var URI, hyperquest, Promise, extend
+declare var URI, hyperquest, Promise
 
 export const Applications = {
   ATTRIBUTE:        'clustoapi.apps.attribute',
