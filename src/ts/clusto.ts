@@ -67,7 +67,18 @@ export interface FromPoolsOptions extends RequestOptions {
 }
 
 export interface ByNameOptions extends RequestOptions {
+  name: string
   driver?: string
+}
+
+export interface ByNamesOptions extends RequestOptions {
+  names: string|string[]
+}
+
+export interface ByAttrOptions extends RequestOptions {
+  key: string
+  subkey?: string
+  value?: any
 }
 
 export class Client {
@@ -148,13 +159,19 @@ export class Client {
   /**
    * @see http://clusto-apiserver.readthedocs.org/clustoapi/all.html#clustoapi.server.get_by_name
    */
-  get_by_name(name: string, opts?: ByNameOptions) {
+  get_by_name(opts: string|ByNameOptions) {
     let options : any = { params: {} }
-    if (opts && opts.mode) {
-      options.mode = opts.mode
-    }
-    if (opts && opts.driver) {
-      options.params.driver = opts.driver
+    let name = null
+    if (typeof opts === 'string') {
+      name = opts
+    } else {
+      name = opts.name
+      if (opts.mode) {
+        options.mode = opts.mode
+      }
+      if (opts.driver) {
+        options.params.driver = opts.driver
+      }
     }
     return this._get(`/by-name/${name}`, options)
   }
@@ -162,15 +179,16 @@ export class Client {
   /**
    * @see http://clusto-apiserver.readthedocs.org/clustoapi/all.html#clustoapi.server.get_by_names
    */
-  get_by_names(names: string|string[], opts?: RequestOptions) {
+  get_by_names(opts: string[]|ByNamesOptions) {
     let options : any = { params: {} }
-    if (typeof names === 'string') {
-      options.params.name = [names]
-    } else if (names instanceof Array) {
-      options.params.name = names
-    }
-    if (opts && opts.mode) {
-      options.mode = opts.mode
+    if (opts instanceof Array) {
+      options.params.name = opts
+    } else {
+      let bno = <ByNamesOptions>opts
+      options.params.name = bno.names
+      if (bno.mode) {
+        options.mode = bno.mode
+      }
     }
     return this._get('/by-names', options)
   }
@@ -178,8 +196,20 @@ export class Client {
   /**
    * @see http://clusto-apiserver.readthedocs.org/clustoapi/all.html#clustoapi.server.get_by_attr
    */
-  get_by_attr() {
-    return this._get('/by-attr')
+  get_by_attr(opts: string|ByAttrOptions) {
+    let options : any = { params: {} }
+    if (typeof opts === 'string') {
+      options.params.key = opts
+    } else {
+      options.params.key = opts.key
+      if (opts.subkey) {
+        options.params.subkey = opts.subkey
+      }
+      if (opts.value) {
+        options.params.value = opts.value
+      }
+    }
+    return this._get('/by-attr', options)
   }
 
   /* ----------------------------------------
