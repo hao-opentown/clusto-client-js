@@ -1,5 +1,5 @@
 {
-  "name": "clusto-client-js",
+  "name": "clusto-client",
   "version": "0.0.0",
   "description": "A Javascript client for Clusto API, implemented in TypeScript. ",
   "main": "index.js",
