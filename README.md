@@ -46,3 +46,9 @@ Work in progress.
   * [ ] `PUT /entity/<driver>/<entity>`
   * [ ] `DELETE /entity/<driver>/<entity>`
 * [ ] Resource Manager application
+  * [ ] `GET /resourcemanager/`
+  * [ ] `GET /resourcemanager/<driver>`
+  * [ ] `POST /resourcemanager/<driver>`
+  * [ ] `GET /resourcemanager/<driver>/<manager>`
+  * [ ] `POST /resourcemanager/<driver>/<manager>`
+  * [ ] `DELETE /resourcemanager/<driver>/<manager>`
