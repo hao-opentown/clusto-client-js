@@ -88,14 +88,31 @@ export interface AttributeGetOptions extends RequestOptions {
   number?: number
 }
 
+export interface AttributeDeleteOptions extends RequestOptions {
+  name: string,
+  key: string,
+  subkey?: string,
+  number?: number
+}
+
 export interface EntityGetOptions extends RequestOptions {
   driver?: string
   name?: string
 }
 
+export interface EntityDeleteOptions extends RequestOptions {
+  driver: string
+  name: string
+}
+
 export interface ResourceGetOptions extends RequestOptions {
   driver?: string
   manager?: string
+}
+
+export interface ResourceDeleteOptions extends RequestOptions {
+  driver: string
+  manager: string
 }
 
 /* -----------------------------------------------------------------------------
@@ -145,24 +162,31 @@ export class Client {
      -------------------------------------------------- */
 
   /**
-   * @see https://github.com/clusto/clusto-apiserver/blob/master/clustoapi/server.py#L119
+   * @see http://clusto-apiserver.readthedocs.org/clustoapi/all.html#clustoapi.server.version
    */
   get_version() : any {
     return this._get('/__version__')
   }
 
   /**
-   * @see https://github.com/clusto/clusto-apiserver/blob/master/clustoapi/server.py#L156
+   * @see http://clusto-apiserver.readthedocs.org/clustoapi/all.html#clustoapi.server.meta
    */
   get_meta() : any {
     return this._get('/__meta__')
   }
 
   /**
-   * @see https://github.com/clusto/clusto-apiserver/blob/master/clustoapi/server.py#L173
+   * @see http://clusto-apiserver.readthedocs.org/clustoapi/all.html#clustoapi.server.build_docs
    */
   get_doc() : any {
     return this._get('/__doc__')
+  }
+
+  /**
+   * @see
+   */
+  get_driverlist() : any {
+    return this._get('/driverlist')
   }
 
   /**
@@ -246,6 +270,9 @@ export class Client {
 
     app: Applications.ATTRIBUTE,
 
+    /**
+     * @see http://clusto-apiserver.readthedocs.org/clustoapi/apps/all.html#clustoapi.apps.attribute.attrs
+     */
     get(opts: string|AttributeGetOptions) {
       let path = new URI()
       if (typeof opts === 'string') {
@@ -265,6 +292,24 @@ export class Client {
       return this._get(path.toString(), {
         app: this.app
       })
+    },
+
+    /**
+     * @see http://clusto-apiserver.readthedocs.org/clustoapi/apps/all.html#clustoapi.apps.attribute.del_attrs
+     */
+    delete(opts: AttributeDeleteOptions) {
+      let path = new URI()
+        .segment(opts.name)
+        .segment(opts.key)
+      if (opts.subkey) {
+        path.segment(opts.subkey)
+      }
+      if (opts.number) {
+        path.segment(opts.number)
+      }
+      return this._delete(path.toString(), {
+        app: this.app
+      })
     }
   }
 
@@ -277,6 +322,10 @@ export class Client {
 
     app: Applications.ENTITY,
 
+    /**
+     * @see http://clusto-apiserver.readthedocs.org/clustoapi/apps/all.html#clustoapi.apps.entity.list
+     * @see http://clusto-apiserver.readthedocs.org/clustoapi/apps/all.html#clustoapi.apps.entity.show
+     */
     get(opts?: string|EntityGetOptions) {
       let path = new URI()
       let options : EntityGetOptions = (typeof opts === 'string') ? { driver: opts } : opts || {}
@@ -290,6 +339,18 @@ export class Client {
         app: this.app,
         mode: options.mode
       })
+    },
+
+    /**
+     * @see http://clusto-apiserver.readthedocs.org/clustoapi/apps/all.html#clustoapi.apps.entity.delete
+     */
+    delete(opts: EntityDeleteOptions) {
+      let path = new URI()
+        .segment(opts.driver)
+        .segment(opts.name)
+      return this._delete(path.toString(), {
+        app: this.app
+      })
     }
   }
 
@@ -302,6 +363,10 @@ export class Client {
 
     app: Applications.RESOURCE_MANAGER,
 
+    /**
+     * @see http://clusto-apiserver.readthedocs.org/clustoapi/apps/all.html#clustoapi.apps.resourcemanager.list
+     * @see http://clusto-apiserver.readthedocs.org/clustoapi/apps/all.html#clustoapi.apps.resourcemanager.show
+     */
     get(opts?: string|ResourceGetOptions) {
       let path = new URI()
       let options : ResourceGetOptions = (typeof opts === 'string') ? { driver: opts } : opts || {}
@@ -315,6 +380,18 @@ export class Client {
         app: this.app,
         mode: options.mode
       })
+    },
+
+    /**
+     * @see http://clusto-apiserver.readthedocs.org/clustoapi/apps/all.html#clustoapi.apps.resourcemanager.deallocate
+     */
+    delete(opts: ResourceDeleteOptions) {
+      let path = new URI()
+        .segment(opts.driver)
+        .segment(opts.manager)
+      return this._delete(path.toString(), {
+        app: this.app
+      })
     }
   }
 
@@ -324,6 +401,10 @@ export class Client {
 
   _get(path: string, options?: any) : any {
     return this._request('GET', path, options)
+  }
+
+  _delete(path: string, options?: any) : any {
+    return this._request('DELETE', path, options)
   }
 
   _request(method: string, path: string, options?: any) : any /* Promise */ {

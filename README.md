@@ -39,6 +39,7 @@ Work in progress.
   * [x]  `GET /by-name/<name>`
   * [x]  `GET /by-names`
   * [x]  `GET /from-pools`
+  * [x]  `GET /driverlist`
   * [ ] Paging (`Clusto-Page`, `Clusto-Pages`, `Clusto-Per-Page`)
 * [ ] Attribute application
   * [x] `GET /atttribute/<name>`
@@ -49,16 +50,16 @@ Work in progress.
   * [ ] `PUT /atttribute/<name>/<key>`
   * [ ] `PUT /atttribute/<name>/<key>/<subkey>`
   * [ ] `PUT /atttribute/<name>/<key>/<subkey>/<number>`
-  * [ ] `DELETE /atttribute/<name>/<key>`
-  * [ ] `DELETE /atttribute/<name>/<key>/<subkey>`
-  * [ ] `DELETE /atttribute/<name>/<key>/<subkey>/<number>`
+  * [x] `DELETE /atttribute/<name>/<key>`
+  * [x] `DELETE /atttribute/<name>/<key>/<subkey>`
+  * [x] `DELETE /atttribute/<name>/<key>/<subkey>/<number>`
 * [ ] Entity application
   * [x] `GET /entity/`
   * [x] `GET /entity/<driver>/`
   * [x] `GET /entity/<driver>/<name>`
   * [ ] `POST /entity/<driver>`
   * [ ] `PUT /entity/<driver>/<name>`
-  * [ ] `DELETE /entity/<driver>/<name>`
+  * [x] `DELETE /entity/<driver>/<name>`
 * [ ] Resource Manager application
   * [x] `GET /resourcemanager/`
   * [x] `GET /resourcemanager/<driver>`
