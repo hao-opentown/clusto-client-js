@@ -66,4 +66,4 @@ Work in progress.
   * [ ] `POST /resourcemanager/<driver>`
   * [x] `GET /resourcemanager/<driver>/<manager>`
   * [ ] `POST /resourcemanager/<driver>/<manager>`
-  * [ ] `DELETE /resourcemanager/<driver>/<manager>`
+  * [x] `DELETE /resourcemanager/<driver>/<manager>`
