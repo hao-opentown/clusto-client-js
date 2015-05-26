@@ -52,7 +52,7 @@ export interface Entity {
 }
 
 /* -----------------------------------------------------------------------------
-   Client and Method Options
+   Method Options
    ----------------------------------------------------------------------------- */
 
 export interface RequestOptions {
@@ -80,6 +80,27 @@ export interface ByAttrOptions extends RequestOptions {
   subkey?: string
   value?: any
 }
+
+export interface AttributeGetOptions extends RequestOptions {
+  name?: string,
+  key?: string,
+  subkey?: string,
+  number?: number
+}
+
+export interface EntityGetOptions extends RequestOptions {
+  driver?: string
+  name?: string
+}
+
+export interface ResourceGetOptions extends RequestOptions {
+  driver?: string
+  manager?: string
+}
+
+/* -----------------------------------------------------------------------------
+   Client
+   ----------------------------------------------------------------------------- */
 
 export class Client {
 
@@ -118,6 +139,10 @@ export class Client {
         }
       })
   }
+
+  /* --------------------------------------------------
+     Main module
+     -------------------------------------------------- */
 
   /**
    * @see https://github.com/clusto/clusto-apiserver/blob/master/clustoapi/server.py#L119
@@ -212,6 +237,87 @@ export class Client {
     return this._get('/by-attr', options)
   }
 
+  /* --------------------------------------------------
+     Attribute module
+     -------------------------------------------------- */
+
+  attribute = {
+    __proto__: this,
+
+    app: Applications.ATTRIBUTE,
+
+    get(opts: string|AttributeGetOptions) {
+      let path = new URI()
+      if (typeof opts === 'string') {
+        path.segment(opts) /* name */
+      } else {
+        path.segment(opts.name)
+        if (opts.key) {
+          path.segment(opts.key)
+        }
+        if (opts.subkey) {
+          path.segment(opts.subkey)
+        }
+        if (opts.number) {
+          path.segment(opts.number)
+        }
+      }
+      return this._get(path.toString(), {
+        app: this.app
+      })
+    }
+  }
+
+  /* --------------------------------------------------
+     Entity module
+     -------------------------------------------------- */
+
+  entity = {
+    __proto__: this,
+
+    app: Applications.ENTITY,
+
+    get(opts?: string|EntityGetOptions) {
+      let path = new URI()
+      let options : EntityGetOptions = (typeof opts === 'string') ? { driver: opts } : opts || {}
+      if (options.driver) {
+        path.segment(options.driver)
+      }
+      if (options.name) {
+        path.segment(options.name)
+      }
+      return this._get(path.toString(), {
+        app: this.app,
+        mode: options.mode
+      })
+    }
+  }
+
+  /* --------------------------------------------------
+     Resource manager module
+     -------------------------------------------------- */
+
+  resource = {
+    __proto__: this,
+
+    app: Applications.RESOURCE_MANAGER,
+
+    get(opts?: string|ResourceGetOptions) {
+      let path = new URI()
+      let options : ResourceGetOptions = (typeof opts === 'string') ? { driver: opts } : opts || {}
+      if (options.driver) {
+        path.segment(options.driver)
+      }
+      if (options.manager) {
+        path.segment(options.manager)
+      }
+      return this._get(path.toString(), {
+        app: this.app,
+        mode: options.mode
+      })
+    }
+  }
+
   /* ----------------------------------------
      Internal helpers
      ---------------------------------------- */
@@ -223,7 +329,12 @@ export class Client {
   _request(method: string, path: string, options?: any) : any /* Promise */ {
     // Build request URL
     let url = this.base_url
-      .segment(path)
+
+    if (options && options.app) {
+      url.segment(this.mount_points.get(options.app))
+    }
+
+    url.segment(path)
       .normalizePath()
 
     // Set up headers

@@ -5,3 +5,4 @@ bower_components/
 _build/
 .baseDir.ts
 .tscache
+tscommand*

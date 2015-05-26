@@ -1,6 +1,15 @@
 A simple Javascript client for [Clusto](http://clusto.org/)'s HTTP API
 ([clusto-apiserver](https://github.com/clusto/clusto-apiserver)).
 
+### Usage
+
+All API methods return [Promises/A+](https://promisesaplus.com/)
+compatible promises via
+[Bluebird](https://github.com/petkaantonov/bluebird). Because the
+clusto API can be configured to re-map all the attribute, entity, and
+resource manager calls to arbitrary path prefixes, the `init()` method
+must be called before calling any of those API methods.
+
 ```javascript
 let clusto = require('clusto-client')
 let client = new clusto.Client('http://clusto:9664')
@@ -11,9 +20,9 @@ client.init()
       pool: ['production', 'my-service'],
       mode: clusto.Mode.EXPANDED
     })
-  })
-  .then((entities) => {
-    console.log(entities)
+    .then((entities) => {
+      console.log(entities)
+    })
   })
 ```
 
@@ -21,6 +30,8 @@ client.init()
 
 Work in progress.
 
+* [ ] Packaging
+* [ ] localStorage caching for `__meta__` data.
 * [ ] [Main module](http://clusto-apiserver.readthedocs.org/clustoapi/all.html)
   * [x]  `GET /__meta__`
   * [x]  `GET /__version__`
@@ -30,25 +41,28 @@ Work in progress.
   * [x]  `GET /from-pools`
   * [ ] Paging (`Clusto-Page`, `Clusto-Pages`, `Clusto-Per-Page`)
 * [ ] Attribute application
-  * [ ] `GET /atttribute/<entity>`
-  * [ ] `POST /atttribute/<entity>`
-  * [ ] `PUT /atttribute/<entity>/<key>`
-  * [ ] `PUT /atttribute/<entity>/<key>/<subkey>`
-  * [ ] `PUT /atttribute/<entity>/<key>/<subkey>/<number>`
-  * [ ] `DELETE /atttribute/<entity>/<key>`
-  * [ ] `DELETE /atttribute/<entity>/<key>/<subkey>`
-  * [ ] `DELETE /atttribute/<entity>/<key>/<subkey>/<number>`
+  * [x] `GET /atttribute/<name>`
+  * [x] `GET /atttribute/<name>/<key>`
+  * [x] `GET /atttribute/<name>/<key>/<subkey>`
+  * [x] `GET /atttribute/<name>/<key>/<subkey>/<number>`
+  * [ ] `POST /atttribute/<name>`
+  * [ ] `PUT /atttribute/<name>/<key>`
+  * [ ] `PUT /atttribute/<name>/<key>/<subkey>`
+  * [ ] `PUT /atttribute/<name>/<key>/<subkey>/<number>`
+  * [ ] `DELETE /atttribute/<name>/<key>`
+  * [ ] `DELETE /atttribute/<name>/<key>/<subkey>`
+  * [ ] `DELETE /atttribute/<name>/<key>/<subkey>/<number>`
 * [ ] Entity application
-  * [ ] `GET /entity/`
-  * [ ] `GET /entity/<driver>/`
-  * [ ] `GET /entity/<driver>/<entity>`
+  * [x] `GET /entity/`
+  * [x] `GET /entity/<driver>/`
+  * [x] `GET /entity/<driver>/<name>`
   * [ ] `POST /entity/<driver>`
-  * [ ] `PUT /entity/<driver>/<entity>`
-  * [ ] `DELETE /entity/<driver>/<entity>`
+  * [ ] `PUT /entity/<driver>/<name>`
+  * [ ] `DELETE /entity/<driver>/<name>`
 * [ ] Resource Manager application
-  * [ ] `GET /resourcemanager/`
-  * [ ] `GET /resourcemanager/<driver>`
+  * [x] `GET /resourcemanager/`
+  * [x] `GET /resourcemanager/<driver>`
   * [ ] `POST /resourcemanager/<driver>`
-  * [ ] `GET /resourcemanager/<driver>/<manager>`
+  * [x] `GET /resourcemanager/<driver>/<manager>`
   * [ ] `POST /resourcemanager/<driver>/<manager>`
   * [ ] `DELETE /resourcemanager/<driver>/<manager>`
