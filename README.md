@@ -42,6 +42,8 @@ Work in progress.
 * [x] Packaging
   * [x] publish on npm
 * [ ] localStorage caching for `__meta__` data.
+* [ ] error handling
+* [ ] unit tests
 * [ ] [Main module](http://clusto-apiserver.readthedocs.org/clustoapi/all.html)
   * [x]  `GET /__meta__`
   * [x]  `GET /__version__`
@@ -51,15 +53,15 @@ Work in progress.
   * [x]  `GET /from-pools`
   * [x]  `GET /driverlist`
   * [ ] Paging (`Clusto-Page`, `Clusto-Pages`, `Clusto-Per-Page`)
-* [ ] Attribute application
+* [x] Attribute application
   * [x] `GET /atttribute/<name>`
   * [x] `GET /atttribute/<name>/<key>`
   * [x] `GET /atttribute/<name>/<key>/<subkey>`
   * [x] `GET /atttribute/<name>/<key>/<subkey>/<number>`
-  * [ ] `POST /atttribute/<name>`
-  * [ ] `PUT /atttribute/<name>/<key>`
-  * [ ] `PUT /atttribute/<name>/<key>/<subkey>`
-  * [ ] `PUT /atttribute/<name>/<key>/<subkey>/<number>`
+  * [x] `POST /atttribute/<name>`
+  * [x] `PUT /atttribute/<name>/<key>`
+  * [x] `PUT /atttribute/<name>/<key>/<subkey>`
+  * [x] `PUT /atttribute/<name>/<key>/<subkey>/<number>`
   * [x] `DELETE /atttribute/<name>/<key>`
   * [x] `DELETE /atttribute/<name>/<key>/<subkey>`
   * [x] `DELETE /atttribute/<name>/<key>/<subkey>/<number>`

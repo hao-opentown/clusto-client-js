@@ -93,6 +93,14 @@ export interface AttributeGetOptions extends RequestOptions {
   number?: number
 }
 
+export interface AttributeSetOptions extends RequestOptions {
+  name: string,
+  key: string,
+  value: any,
+  subkey?: string,
+  number?: number
+}
+
 export interface AttributeDeleteOptions extends RequestOptions {
   name: string,
   key: string,
@@ -311,6 +319,57 @@ export class Client {
     },
 
     /**
+     * Add attributes to an entity.
+     *
+     * @see http://clusto-apiserver.readthedocs.org/clustoapi/apps/all.html#clustoapi.apps.attribute.add_attr
+     */
+    add(opts: AttributeSetOptions) {
+      let path = `/${opts.name}`
+      let options : any = {
+        app: this.app,
+        mode: opts.mode,
+        params: {
+          key: opts.key,
+          value: opts.value
+        }
+      }
+      if (opts.subkey) {
+        options.params.subkey = opts.subkey
+      }
+      if (opts.number) {
+        options.params.number = opts.number
+      }
+      return this._post(path, options)
+    },
+
+    /**
+     * Update attributes on an entity.
+     *
+     * @see http://clusto-apiserver.readthedocs.org/clustoapi/apps/all.html#clustoapi.apps.attribute.set_attr
+     */
+    set(opts: AttributeSetOptions) {
+      let path = new URI()
+        .segment(opts.name)
+        .segment(opts.key)
+      if (opts.subkey) {
+        path.segment(opts.subkey)
+      }
+      if (opts.number) {
+        path.segment(opts.number)
+      }
+      let options = {
+        app: this.app,
+        mode: opts.mode,
+        params: {
+          value: opts.value
+        }
+      }
+      return this._put(path, options)
+    },
+
+    /**
+     * Remove attributes from an entity.
+     *
      * @see http://clusto-apiserver.readthedocs.org/clustoapi/apps/all.html#clustoapi.apps.attribute.del_attrs
      */
     delete(opts: AttributeDeleteOptions) {
