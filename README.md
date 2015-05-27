@@ -1,6 +1,15 @@
 A simple Javascript client for [Clusto](http://clusto.org/)'s HTTP API
 ([clusto-apiserver](https://github.com/clusto/clusto-apiserver)).
 
+### Installation
+
+```
+npm install clusto-client
+```
+
+The library and its dependencies are compatible with
+[browserify](http://browserify.org/).
+
 ### Usage
 
 All API methods return [Promises/A+](https://promisesaplus.com/)

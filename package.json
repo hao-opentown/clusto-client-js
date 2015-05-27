@@ -1,8 +1,15 @@
 {
   "name": "clusto-client",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "A Javascript client for Clusto API, implemented in TypeScript. ",
   "main": "dist/clusto-client.js",
+  "repository" : {
+    "type": "git",
+    "url": "https://github.com/aalpern/clusto-client-js"
+  },
+  "bugs": {
+    "url": "https://github.com/aalpern/clusto-client-js/issues"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -14,7 +21,6 @@
   "author": "Adam Alpern",
   "license": "ISC",
   "devDependencies": {
-    "babel-core": "^5.3.1",
     "grunt": "^0.4.5",
     "grunt-babel": "^5.0.0",
     "grunt-contrib-copy": "^0.8.0",
