@@ -107,13 +107,13 @@ export interface EntityGetOptions extends RequestOptions {
 
 export interface EntityCreateOptions extends RequestOptions {
   driver: string
-  name: string
+  name: string|string[]
 }
 
 export interface EntityInsertOptions extends RequestOptions {
   driver: string
   name: string
-  device: string
+  device: string|string[]
 }
 
 export interface EntityDeleteOptions extends RequestOptions {
