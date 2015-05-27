@@ -1,8 +1,9 @@
 declare var require
 
-const hyperquest = require('hyperquest')
-const URI        = require('URIjs')
-const Promise    = require('bluebird')
+const hyperquest  = require('hyperquest')
+const URI         = require('URIjs')
+const Promise     = require('bluebird')
+const querystring = require('querystring')
 
 /* -----------------------------------------------------------------------------
    API Constants
@@ -102,6 +103,17 @@ export interface AttributeDeleteOptions extends RequestOptions {
 export interface EntityGetOptions extends RequestOptions {
   driver?: string
   name?: string
+}
+
+export interface EntityCreateOptions extends RequestOptions {
+  driver: string
+  name: string
+}
+
+export interface EntityInsertOptions extends RequestOptions {
+  driver: string
+  name: string
+  device: string
 }
 
 export interface EntityDeleteOptions extends RequestOptions {
@@ -346,6 +358,34 @@ export class Client {
     },
 
     /**
+     * @see http://clusto-apiserver.readthedocs.org/clustoapi/apps/all.html#clustoapi.apps.entity.create
+     */
+    create(opts: EntityCreateOptions) {
+      let path = `/${opts.driver}`
+      return this._post(path, {
+        mode: opts.mode,
+        app: this.app,
+        params: {
+          name: opts.name
+        }
+      })
+    },
+
+    /**
+     * @see http://clusto-apiserver.readthedocs.org/clustoapi/apps/all.html#clustoapi.apps.entity.insert
+     */
+    insert(opts: EntityInsertOptions) {
+      let path = `/${opts.driver}/${opts.name}`
+      return this._put(path, {
+        mode: opts.mode,
+        app: this.app,
+        params: {
+          device: opts.device
+        }
+      })
+    },
+
+    /**
      * @see http://clusto-apiserver.readthedocs.org/clustoapi/apps/all.html#clustoapi.apps.entity.delete
      */
     delete(opts: EntityDeleteOptions) {
@@ -411,6 +451,14 @@ export class Client {
     return this._request('DELETE', path, options)
   }
 
+  _post(path: string, options?: any) : any {
+    return this._request('POST', path, options)
+  }
+
+  _put(path: string, options?: any) : any {
+    return this._request('PUT', path, options)
+  }
+
   _request(method: string, path: string, options?: any) : any /* Promise */ {
     // Build request URL
     let url = this.base_url
@@ -432,15 +480,20 @@ export class Client {
     }
 
     // Query string
-    if (options && options.params) {
+    if ((method ==='GET') && options && options.params) {
       url.setSearch(options.params)
     }
 
+    console.log(`${method} ${url.toString()}`)
     let req = hyperquest({
       method: method,
       uri: url.toString(),
       headers: headers
     })
+
+    if ((method === 'POST' || method === 'PUT') && options && options.params) {
+      req.end(querystring.stringify(options.params))
+    }
 
     return new Promise((resolve, reject) => {
       let body = ''
@@ -449,8 +502,12 @@ export class Client {
           body += buffer.toString()
         })
         .on('end', () => {
-          let data = JSON.parse(body)
-          resolve(data)
+          try {
+            let data = JSON.parse(body)
+            resolve(data)
+          } catch (e) {
+            reject(body)
+          }
         })
         .on('error', (e) => {
           reject(e)

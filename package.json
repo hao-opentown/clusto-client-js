@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "A Javascript client for Clusto API, implemented in TypeScript. ",
   "main": "dist/clusto-client.js",
-  "repository" : {
+  "repository": {
     "type": "git",
     "url": "https://github.com/aalpern/clusto-client-js"
   },
@@ -31,6 +31,7 @@
   "dependencies": {
     "URIjs": "^1.15.1",
     "bluebird": "^2.9.26",
-    "hyperquest": "^1.2.0"
+    "hyperquest": "^1.2.0",
+    "querystring": "^0.2.0"
   }
 }

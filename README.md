@@ -63,12 +63,12 @@ Work in progress.
   * [x] `DELETE /atttribute/<name>/<key>`
   * [x] `DELETE /atttribute/<name>/<key>/<subkey>`
   * [x] `DELETE /atttribute/<name>/<key>/<subkey>/<number>`
-* [ ] Entity application
+* [x] Entity application
   * [x] `GET /entity/`
   * [x] `GET /entity/<driver>/`
   * [x] `GET /entity/<driver>/<name>`
-  * [ ] `POST /entity/<driver>`
-  * [ ] `PUT /entity/<driver>/<name>`
+  * [x] `POST /entity/<driver>`
+  * [x] `PUT /entity/<driver>/<name>`
   * [x] `DELETE /entity/<driver>/<name>`
 * [ ] Resource Manager application
   * [x] `GET /resourcemanager/`
