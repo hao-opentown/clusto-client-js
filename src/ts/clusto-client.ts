@@ -134,6 +134,19 @@ export interface ResourceGetOptions extends RequestOptions {
   manager?: string
 }
 
+export interface ResourceCreateOptions extends RequestOptions {
+  driver: string
+  name: string
+  params?: { [index: string] : any }
+}
+
+export interface ResourceAllocateOptions extends RequestOptions {
+  manager: string
+  driver: string
+  object?: string
+  resource?: string
+}
+
 export interface ResourceDeleteOptions extends RequestOptions {
   driver: string
   manager: string
@@ -486,9 +499,49 @@ export class Client {
     },
 
     /**
+     * @see http://clusto-apiserver.readthedocs.org/clustoapi/apps/all.html#clustoapi.apps.resourcemanager.create
+     */
+    create(opts: ResourceCreateOptions) {
+      let path = `/${opts.driver}`
+      let options : any = {
+        app: this.app,
+        mode: opts.mode,
+        params: {
+          name: opts.name
+        }
+      }
+      if (opts.params) {
+        for (let key of Object.keys(opts.params)) {
+          options.params[key] = opts.params[key]
+        }
+      }
+      return this._post(path, options)
+    },
+
+    /**
+     * @see http://clusto-apiserver.readthedocs.org/clustoapi/apps/all.html#clustoapi.apps.resourcemanager.allocate
+     */
+    allocate(opts: ResourceAllocateOptions) {
+      let path =`/${opts.driver}/${opts.manager}`
+      let thing = opts.driver || opts.object
+      let options : any = {
+        app: this.app,
+        mode: opts.mode,
+        params: {}
+      }
+      if (opts.object) {
+        options.params.object = opts.object
+      }
+      if (opts.resource) {
+        options.params.resource = opts.resource
+      }
+      return this._post(path, options)
+    },
+
+    /**
      * @see http://clusto-apiserver.readthedocs.org/clustoapi/apps/all.html#clustoapi.apps.resourcemanager.deallocate
      */
-    delete(opts: ResourceDeleteOptions) {
+    deallocate(opts: ResourceDeleteOptions) {
       let path = new URI()
         .segment(opts.driver)
         .segment(opts.manager)

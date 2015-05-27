@@ -73,10 +73,10 @@ Work in progress.
   * [x] `POST /entity/<driver>`
   * [x] `PUT /entity/<driver>/<name>`
   * [x] `DELETE /entity/<driver>/<name>`
-* [ ] Resource Manager application
+* [x] Resource Manager application
   * [x] `GET /resourcemanager/`
   * [x] `GET /resourcemanager/<driver>`
-  * [ ] `POST /resourcemanager/<driver>`
+  * [x] `POST /resourcemanager/<driver>`
   * [x] `GET /resourcemanager/<driver>/<manager>`
-  * [ ] `POST /resourcemanager/<driver>/<manager>`
+  * [x] `POST /resourcemanager/<driver>/<manager>`
   * [x] `DELETE /resourcemanager/<driver>/<manager>`
