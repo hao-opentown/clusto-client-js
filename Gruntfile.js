@@ -39,6 +39,9 @@ module.exports = function(grunt) {
       }
     },
 
+    /**
+     * Create a minified version for distribution.
+     */
     uglify: {
       dist: {
         options: {
@@ -51,11 +54,26 @@ module.exports = function(grunt) {
       }
     },
 
+    /**
+     * Copy the non-minified lib and sourceMap into the dist/ folder.
+     */
     copy: {
       dist: {
         files: [
           { expand: true, flatten: true, cwd: '_build/es5/', src: 'clusto-client.js*', dest: 'dist/' }
         ]
+      }
+    },
+
+    /**
+     * Create a bundle of the library and dependencies for in-browser
+     * testing.
+     */
+    browserify: {
+      bundle: {
+        files: {
+          '_build/bundle.js' : [ '_build/es5/clusto-client.js' ]
+        }
       }
     },
 
@@ -72,6 +90,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-copy')
   grunt.loadNpmTasks('grunt-contrib-uglify')
   grunt.loadNpmTasks('grunt-babel')
+  grunt.loadNpmTasks('grunt-browserify')
   grunt.loadNpmTasks('grunt-ts-1.5')
 
   grunt.registerTask('lib', [

@@ -43,6 +43,7 @@ Work in progress.
   * [x] publish on npm
 * [ ] localStorage caching for `__meta__` data.
 * [ ] error handling
+* [ ] non-JSON content handling (for __doc__)
 * [ ] unit tests
 * [ ] [Main module](http://clusto-apiserver.readthedocs.org/clustoapi/all.html)
   * [x]  `GET /__meta__`
