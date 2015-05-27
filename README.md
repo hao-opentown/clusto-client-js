@@ -31,6 +31,7 @@ client.init()
 Work in progress.
 
 * [ ] Packaging
+  * [ ] publish on npm
 * [ ] localStorage caching for `__meta__` data.
 * [ ] [Main module](http://clusto-apiserver.readthedocs.org/clustoapi/all.html)
   * [x]  `GET /__meta__`

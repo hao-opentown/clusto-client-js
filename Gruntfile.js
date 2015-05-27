@@ -14,7 +14,7 @@ module.exports = function(grunt) {
     ts: {
       lib: {
         src: SOURCE_FILES,
-        outDir: '_build/lib',
+        outDir: '_build/es6',
         options: {
           target: 'es6',
           comments: true
@@ -23,32 +23,39 @@ module.exports = function(grunt) {
     },
 
     /**
-     * 2 - Compile the lib sources to a single bundle using
-     * browserify, running babeljs over the sources on the way for ES5
-     * output.
+     * 2 - Transpile the ES6 sources to ES5.
      */
-    browserify: {
+    babel: {
       lib: {
-        files: {
-          '_build/clusto-client.js' : [
-            '_build/lib/**/*.js'
-          ]
-        },
         options: {
-          transform: [
-            'babelify'
-          ],
-          browserifyOptions: {
-            debug: true
-          }
-        }
-      },
-      dep: {
+          sourceMap: true
+        },
+        files: [{
+          expand: true,
+          cwd: '_build/es6',
+          src: ['**/*.js'],
+          dest: '_build/es5'
+        }]
+      }
+    },
+
+    uglify: {
+      dist: {
+        options: {
+          sourceMap: true,
+          sourceMapIn: '_build/es5/clusto-client.js.map'
+        },
         files: {
-          '_build/dependencies.js' : [
-            'src/js/dependencies.js'
-          ]
+          'dist/clusto-client.min.js' : '_build/es5/clusto-client.js'
         }
+      }
+    },
+
+    copy: {
+      dist: {
+        files: [
+          { expand: true, flatten: true, cwd: '_build/es5/', src: 'clusto-client.js*', dest: 'dist/' }
+        ]
       }
     },
 
@@ -56,35 +63,26 @@ module.exports = function(grunt) {
       lib: {
         files: SOURCE_FILES,
         tasks: ['lib']
-      },
-      dep: {
-        files: [
-          'src/js/dependencies.js'
-        ],
-        tasks: ['dep']
       }
     }
 
   })
 
-  grunt.loadNpmTasks('grunt-contrib-concat')
   grunt.loadNpmTasks('grunt-contrib-watch')
-  grunt.loadNpmTasks('grunt-browserify')
+  grunt.loadNpmTasks('grunt-contrib-copy')
+  grunt.loadNpmTasks('grunt-contrib-uglify')
+  grunt.loadNpmTasks('grunt-babel')
   grunt.loadNpmTasks('grunt-ts-1.5')
 
   grunt.registerTask('lib', [
-    'ts', 'browserify:lib'
+    'ts', 'babel'
   ])
 
-  grunt.registerTask('dep', [
-    'browserify:dep'
-  ])
-
-  grunt.registerTask('all', [
-    'lib', 'dep'
+  grunt.registerTask('dist', [
+    'lib', 'uglify:dist', 'copy:dist'
   ])
 
   grunt.registerTask('default', [
-    'all'
+    'lib'
   ])
 }

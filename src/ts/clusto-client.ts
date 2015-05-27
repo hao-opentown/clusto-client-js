@@ -1,4 +1,8 @@
-declare var URI, hyperquest, Promise
+declare var require
+
+const hyperquest = require('hyperquest')
+const URI        = require('URIjs')
+const Promise    = require('bluebird')
 
 /* -----------------------------------------------------------------------------
    API Constants
