@@ -11,6 +11,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 var hyperquest = require('hyperquest');
 var URI = require('URIjs');
 var Promise = require('bluebird');
+var querystring = require('querystring');
 /* -----------------------------------------------------------------------------
    API Constants
    ----------------------------------------------------------------------------- */
@@ -81,6 +82,53 @@ var Client = (function () {
                 });
             },
             /**
+             * Add attributes to an entity.
+             *
+             * @see http://clusto-apiserver.readthedocs.org/clustoapi/apps/all.html#clustoapi.apps.attribute.add_attr
+             */
+            add: function add(opts) {
+                var path = '/' + opts.name;
+                var options = {
+                    app: this.app,
+                    mode: opts.mode,
+                    params: {
+                        key: opts.key,
+                        value: opts.value
+                    }
+                };
+                if (opts.subkey) {
+                    options.params.subkey = opts.subkey;
+                }
+                if (opts.number) {
+                    options.params.number = opts.number;
+                }
+                return this._post(path, options);
+            },
+            /**
+             * Update attributes on an entity.
+             *
+             * @see http://clusto-apiserver.readthedocs.org/clustoapi/apps/all.html#clustoapi.apps.attribute.set_attr
+             */
+            set: function set(opts) {
+                var path = new URI().segment(opts.name).segment(opts.key);
+                if (opts.subkey) {
+                    path.segment(opts.subkey);
+                }
+                if (opts.number) {
+                    path.segment(opts.number);
+                }
+                var options = {
+                    app: this.app,
+                    mode: opts.mode,
+                    params: {
+                        value: opts.value
+                    }
+                };
+                return this._put(path, options);
+            },
+            /**
+             * Remove attributes from an entity.
+             *
              * @see http://clusto-apiserver.readthedocs.org/clustoapi/apps/all.html#clustoapi.apps.attribute.del_attrs
              */
             'delete': function _delete(opts) {
@@ -121,6 +169,47 @@ var Client = (function () {
                 });
             },
             /**
+             * @see http://clusto-apiserver.readthedocs.org/clustoapi/apps/all.html#clustoapi.apps.entity.create
+             */
+            create: function create(opts) {
+                var path = '/' + opts.driver;
+                return this._post(path, {
+                    mode: opts.mode,
+                    app: this.app,
+                    params: {
+                        name: opts.name
+                    }
+                });
+            },
+            /**
+             * @see http://clusto-apiserver.readthedocs.org/clustoapi/apps/all.html#clustoapi.apps.entity.action
+             */
+            insert: function insert(opts) {
+                var path = '/' + opts.driver + '/' + opts.name;
+                return this._post(path, {
+                    mode: opts.mode,
+                    app: this.app,
+                    params: {
+                        device: opts.device,
+                        action: 'insert'
+                    }
+                });
+            },
+            /**
+             * @see http://clusto-apiserver.readthedocs.org/clustoapi/apps/all.html#clustoapi.apps.entity.action
+             */
+            remove: function remove(opts) {
+                var path = '/' + opts.driver + '/' + opts.name;
+                return this._post(path, {
+                    mode: opts.mode,
+                    app: this.app,
+                    params: {
+                        device: opts.device,
+                        action: 'remove'
+                    }
+                });
+            },
+            /**
              * @see http://clusto-apiserver.readthedocs.org/clustoapi/apps/all.html#clustoapi.apps.entity.delete
              */
             'delete': function _delete(opts) {
@@ -155,9 +244,68 @@ var Client = (function () {
                 });
             },
             /**
+             * @see http://clusto-apiserver.readthedocs.org/clustoapi/apps/all.html#clustoapi.apps.resourcemanager.create
+             */
+            create: function create(opts) {
+                var path = '/' + opts.driver;
+                var options = {
+                    app: this.app,
+                    mode: opts.mode,
+                    params: {
+                        name: opts.name
+                    }
+                };
+                if (opts.params) {
+                    var _iteratorNormalCompletion = true;
+                    var _didIteratorError = false;
+                    var _iteratorError = undefined;
+
+                    try {
+                        for (var _iterator = Object.keys(opts.params)[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                            var key = _step.value;
+
+                            options.params[key] = opts.params[key];
+                        }
+                    } catch (err) {
+                        _didIteratorError = true;
+                        _iteratorError = err;
+                    } finally {
+                        try {
+                            if (!_iteratorNormalCompletion && _iterator['return']) {
+                                _iterator['return']();
+                            }
+                        } finally {
+                            if (_didIteratorError) {
+                                throw _iteratorError;
+                            }
+                        }
+                    }
+                }
+                return this._post(path, options);
+            },
+            /**
+             * @see http://clusto-apiserver.readthedocs.org/clustoapi/apps/all.html#clustoapi.apps.resourcemanager.allocate
+             */
+            allocate: function allocate(opts) {
+                var path = '/' + opts.driver + '/' + opts.manager;
+                var thing = opts.driver || opts.object;
+                var options = {
+                    app: this.app,
+                    mode: opts.mode,
+                    params: {}
+                };
+                if (opts.object) {
+                    options.params.object = opts.object;
+                }
+                if (opts.resource) {
+                    options.params.resource = opts.resource;
+                }
+                return this._post(path, options);
+            },
+            /**
              * @see http://clusto-apiserver.readthedocs.org/clustoapi/apps/all.html#clustoapi.apps.resourcemanager.deallocate
              */
-            'delete': function _delete(opts) {
+            deallocate: function deallocate(opts) {
                 var path = new URI().segment(opts.driver).segment(opts.manager);
                 return this._delete(path.toString(), {
                     app: this.app
@@ -194,28 +342,28 @@ var Client = (function () {
 
             return this.get_meta().then(function (data) {
                 _this.mount_points.clear();
-                var _iteratorNormalCompletion = true;
-                var _didIteratorError = false;
-                var _iteratorError = undefined;
+                var _iteratorNormalCompletion2 = true;
+                var _didIteratorError2 = false;
+                var _iteratorError2 = undefined;
 
                 try {
-                    for (var _iterator = Object.keys(data)[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-                        var mount = _step.value;
+                    for (var _iterator2 = Object.keys(data)[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+                        var mount = _step2.value;
 
                         var app = data[mount];
                         _this.mount_points.set(app, mount);
                     }
                 } catch (err) {
-                    _didIteratorError = true;
-                    _iteratorError = err;
+                    _didIteratorError2 = true;
+                    _iteratorError2 = err;
                 } finally {
                     try {
-                        if (!_iteratorNormalCompletion && _iterator['return']) {
-                            _iterator['return']();
+                        if (!_iteratorNormalCompletion2 && _iterator2['return']) {
+                            _iterator2['return']();
                         }
                     } finally {
-                        if (_didIteratorError) {
-                            throw _iteratorError;
+                        if (_didIteratorError2) {
+                            throw _iteratorError2;
                         }
                     }
                 }
@@ -355,6 +503,16 @@ var Client = (function () {
             return this._request('DELETE', path, options);
         }
     }, {
+        key: '_post',
+        value: function _post(path, options) {
+            return this._request('POST', path, options);
+        }
+    }, {
+        key: '_put',
+        value: function _put(path, options) {
+            return this._request('PUT', path, options);
+        }
+    }, {
         key: '_request',
         value: function _request(method, path, options) {
             // Build request URL
@@ -371,22 +529,36 @@ var Client = (function () {
             if (options && options.mode) {
                 headers[Headers.MODE] = options.mode;
             }
+            if (options && options.page) {
+                headers[Headers.PAGE] = options.page;
+            }
+            if (options && options.per_page) {
+                headers[Headers.PER_PAGE] = options.per_page;
+            }
             // Query string
-            if (options && options.params) {
+            if (method === 'GET' && options && options.params) {
                 url.setSearch(options.params);
             }
+            console.log('' + method + ' ' + url.toString());
             var req = hyperquest({
                 method: method,
                 uri: url.toString(),
                 headers: headers
             });
+            if ((method === 'POST' || method === 'PUT') && options && options.params) {
+                req.end(querystring.stringify(options.params));
+            }
             return new Promise(function (resolve, reject) {
                 var body = '';
                 req.on('data', function (buffer) {
                     body += buffer.toString();
                 }).on('end', function () {
-                    var data = JSON.parse(body);
-                    resolve(data);
+                    try {
+                        var data = JSON.parse(body);
+                        resolve(data);
+                    } catch (e) {
+                        reject(body);
+                    }
                 }).on('error', function (e) {
                     reject(e);
                 });

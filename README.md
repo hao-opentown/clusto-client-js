@@ -1,6 +1,10 @@
 A simple Javascript client for [Clusto](http://clusto.org/)'s HTTP API
 ([clusto-apiserver](https://github.com/clusto/clusto-apiserver)).
 
+### Clusto API Server Compatibility
+
+This library requires `clusto-apiserver` version `0.4.0` or later.
+
 ### Installation
 
 ```

@@ -17,7 +17,8 @@ module.exports = function(grunt) {
         outDir: '_build/es6',
         options: {
           target: 'es6',
-          comments: true
+          comments: true,
+          declaration: true
         }
       }
     },
@@ -60,7 +61,8 @@ module.exports = function(grunt) {
     copy: {
       dist: {
         files: [
-          { expand: true, flatten: true, cwd: '_build/es5/', src: 'clusto-client.js*', dest: 'dist/' }
+          { expand: true, flatten: true, cwd: '_build/es5/', src: 'clusto-client.js*', dest: 'dist/' },
+          { expand: true, flatten: true, cwd: '_build/es6/', src: 'clusto-client.d.ts', dest: 'dist/' }
         ]
       }
     },

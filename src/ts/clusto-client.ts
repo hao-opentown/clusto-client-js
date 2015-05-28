@@ -609,10 +609,10 @@ export class Client {
       headers[Headers.MODE] = options.mode
     }
     if (options && options.page) {
-      headers[Header.PAGE] = options.page
+      headers[Headers.PAGE] = options.page
     }
     if (options && options.per_page) {
-      headers[Header.PER_PAGE] = options.per_page
+      headers[Headers.PER_PAGE] = options.per_page
     }
 
     // Query string
