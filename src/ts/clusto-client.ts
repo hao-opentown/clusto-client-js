@@ -62,6 +62,8 @@ export interface Entity {
 
 export interface RequestOptions {
   mode?: string
+  page?: number
+  per_page?: number
 }
 
 export interface FromPoolsOptions extends RequestOptions {
@@ -444,15 +446,31 @@ export class Client {
     },
 
     /**
-     * @see http://clusto-apiserver.readthedocs.org/clustoapi/apps/all.html#clustoapi.apps.entity.insert
+     * @see http://clusto-apiserver.readthedocs.org/clustoapi/apps/all.html#clustoapi.apps.entity.action
      */
     insert(opts: EntityInsertOptions) {
       let path = `/${opts.driver}/${opts.name}`
-      return this._put(path, {
+      return this._post(path, {
         mode: opts.mode,
         app: this.app,
         params: {
-          device: opts.device
+          device: opts.device,
+          action: 'insert'
+        }
+      })
+    },
+
+    /**
+     * @see http://clusto-apiserver.readthedocs.org/clustoapi/apps/all.html#clustoapi.apps.entity.action
+     */
+    remove(opts: EntityInsertOptions) {
+      let path = `/${opts.driver}/${opts.name}`
+      return this._post(path, {
+        mode: opts.mode,
+        app: this.app,
+        params: {
+          device: opts.device,
+          action: 'remove'
         }
       })
     },
@@ -589,6 +607,12 @@ export class Client {
     }
     if (options && options.mode) {
       headers[Headers.MODE] = options.mode
+    }
+    if (options && options.page) {
+      headers[Header.PAGE] = options.page
+    }
+    if (options && options.per_page) {
+      headers[Header.PER_PAGE] = options.per_page
     }
 
     // Query string

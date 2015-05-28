@@ -45,15 +45,20 @@ Work in progress.
 * [ ] error handling
 * [ ] non-JSON content handling (for __doc__)
 * [ ] unit tests
+* [x] Update for 0.4 API changes
 * [ ] [Main module](http://clusto-apiserver.readthedocs.org/clustoapi/all.html)
-  * [x]  `GET /__meta__`
-  * [x]  `GET /__version__`
-  * [x]  `GET /__doc__`
-  * [x]  `GET /by-name/<name>`
-  * [x]  `GET /by-names`
-  * [x]  `GET /from-pools`
-  * [x]  `GET /driverlist`
-  * [ ] Paging (`Clusto-Page`, `Clusto-Pages`, `Clusto-Per-Page`)
+  * [x] `GET /__meta__`
+  * [x] `GET /__version__`
+  * [x] `GET /__doc__`
+  * [x] `GET /by-name/<name>`
+  * [x] `GET /by-names`
+  * [x] `GET /from-pools`
+  * [x] `GET /driverlist`
+  * [x] `Clusto-Page`, `Clusto-Per-Page` in request
+  * [ ] `Clusto-Pages` in response
+    * responses that can be paged should return the data in a wrapper
+      that includes the value from the `Clusto-Pages` header, not just
+      the raw body.
 * [x] Attribute application
   * [x] `GET /atttribute/<name>`
   * [x] `GET /atttribute/<name>/<key>`
