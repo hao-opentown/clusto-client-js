@@ -1,9 +1,8 @@
 declare var require
 
-const hyperquest  = require('hyperquest')
+const request     = require('superagent')
 const URI         = require('URIjs')
 const Promise     = require('bluebird')
-const querystring = require('querystring')
 
 /* -----------------------------------------------------------------------------
    API Constants
@@ -600,54 +599,37 @@ export class Client {
     url.segment(path)
       .normalizePath()
 
-    // Set up headers
-    let headers = {
-      'Clusto-Minify' : true,
-      'Accept' : 'application/json'
-    }
+    let req = request(method, url.toString())
+      .set('Clusto-Minify', true)
+      .set('Accept', 'application/json')
     if (options && options.mode) {
-      headers[Headers.MODE] = options.mode
+      req.set(Headers.MODE, options.mode)
     }
     if (options && options.page) {
-      headers[Headers.PAGE] = options.page
+      req.set(Headers.PAGE, options.page)
     }
     if (options && options.per_page) {
-      headers[Headers.PER_PAGE] = options.per_page
+      req.set(Headers.PER_PAGE, options.per_page)
     }
 
     // Query string
     if ((method ==='GET') && options && options.params) {
-      url.setSearch(options.params)
+      req.query(options.params)
     }
 
-    console.log(`${method} ${url.toString()}`)
-    let req = hyperquest({
-      method: method,
-      uri: url.toString(),
-      headers: headers
-    })
-
     if ((method === 'POST' || method === 'PUT') && options && options.params) {
-      req.end(querystring.stringify(options.params))
+      req.set('Content-Type', 'application/x-www-form-urlencoded')
+        .send(options.params)
     }
 
     return new Promise((resolve, reject) => {
-      let body = ''
-      req
-        .on('data', (buffer) => {
-          body += buffer.toString()
-        })
-        .on('end', () => {
-          try {
-            let data = JSON.parse(body)
-            resolve(data)
-          } catch (e) {
-            reject(body)
-          }
-        })
-        .on('error', (e) => {
-          reject(e)
-        })
+      req.end((err, res) => {
+        if (err) {
+          reject(err)
+        } else {
+          resolve(res.body)
+        }
+      })
     })
   }
 }
