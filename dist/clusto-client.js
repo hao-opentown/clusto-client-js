@@ -8,10 +8,9 @@ var _createClass = (function () { function defineProperties(target, props) { for
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-var hyperquest = require('hyperquest');
+var request = require('superagent');
 var URI = require('URIjs');
 var Promise = require('bluebird');
-var querystring = require('querystring');
 /* -----------------------------------------------------------------------------
    API Constants
    ----------------------------------------------------------------------------- */
@@ -521,46 +520,30 @@ var Client = (function () {
                 url.segment(this.mount_points.get(options.app));
             }
             url.segment(path).normalizePath();
-            // Set up headers
-            var headers = {
-                'Clusto-Minify': true,
-                'Accept': 'application/json'
-            };
+            var req = request(method, url.toString()).set('Clusto-Minify', true).set('Accept', 'application/json');
             if (options && options.mode) {
-                headers[Headers.MODE] = options.mode;
+                req.set(Headers.MODE, options.mode);
             }
             if (options && options.page) {
-                headers[Headers.PAGE] = options.page;
+                req.set(Headers.PAGE, options.page);
             }
             if (options && options.per_page) {
-                headers[Headers.PER_PAGE] = options.per_page;
+                req.set(Headers.PER_PAGE, options.per_page);
             }
             // Query string
             if (method === 'GET' && options && options.params) {
-                url.setSearch(options.params);
+                req.query(options.params);
             }
-            console.log('' + method + ' ' + url.toString());
-            var req = hyperquest({
-                method: method,
-                uri: url.toString(),
-                headers: headers
-            });
             if ((method === 'POST' || method === 'PUT') && options && options.params) {
-                req.end(querystring.stringify(options.params));
+                req.set('Content-Type', 'application/x-www-form-urlencoded').send(options.params);
             }
             return new Promise(function (resolve, reject) {
-                var body = '';
-                req.on('data', function (buffer) {
-                    body += buffer.toString();
-                }).on('end', function () {
-                    try {
-                        var data = JSON.parse(body);
-                        resolve(data);
-                    } catch (e) {
-                        reject(body);
+                req.end(function (err, res) {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(res.body);
                     }
-                }).on('error', function (e) {
-                    reject(e);
                 });
             });
         }
