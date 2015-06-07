@@ -1,8 +1,8 @@
 declare var require
 
-const request     = require('superagent')
-const URI         = require('URIjs')
-const Promise     = require('bluebird')
+require('bluebird')
+const request = require('superagent')
+const URI     = require('URIjs')
 
 /* -----------------------------------------------------------------------------
    API Constants
@@ -53,6 +53,10 @@ export interface Entity {
   driver: string
   name: string
   parents?: string[]
+}
+
+export interface StringDictionary {
+  [index: string] : string
 }
 
 /* -----------------------------------------------------------------------------
@@ -184,7 +188,7 @@ export class Client {
    *
    * @returns Promise
    */
-  init() : any {
+  init() : Promise<void> {
     return this.get_meta()
       .then(data => {
         this.mount_points.clear()
@@ -202,35 +206,35 @@ export class Client {
   /**
    * @see http://clusto-apiserver.readthedocs.org/clustoapi/all.html#clustoapi.server.version
    */
-  get_version() : any {
+  get_version() : Promise<string> {
     return this._get('/__version__')
   }
 
   /**
    * @see http://clusto-apiserver.readthedocs.org/clustoapi/all.html#clustoapi.server.meta
    */
-  get_meta() : any {
+  get_meta() : Promise<StringDictionary> {
     return this._get('/__meta__')
   }
 
   /**
    * @see http://clusto-apiserver.readthedocs.org/clustoapi/all.html#clustoapi.server.build_docs
    */
-  get_doc() : any {
+  get_doc() : Promise<string> {
     return this._get('/__doc__')
   }
 
   /**
    * @see
    */
-  get_driverlist() : any {
+  get_driverlist() : Promise<StringDictionary> {
     return this._get('/driverlist')
   }
 
   /**
    * @see http://clusto-apiserver.readthedocs.org/clustoapi/all.html#clustoapi.server.get_from_pools
    */
-  get_from_pools(opts: string|FromPoolsOptions) {
+  get_from_pools(opts: string|FromPoolsOptions) : Promise<Entity[]|string[]> {
     let options : any = { params: {} }
     if (typeof opts === 'string') {
       options.params.pool = opts
@@ -246,7 +250,7 @@ export class Client {
   /**
    * @see http://clusto-apiserver.readthedocs.org/clustoapi/all.html#clustoapi.server.get_by_name
    */
-  get_by_name(opts: string|ByNameOptions) {
+  get_by_name(opts: string|ByNameOptions) : Promise<Entity|string> {
     let options : any = { params: {} }
     let name = null
     if (typeof opts === 'string') {
@@ -266,7 +270,7 @@ export class Client {
   /**
    * @see http://clusto-apiserver.readthedocs.org/clustoapi/all.html#clustoapi.server.get_by_names
    */
-  get_by_names(opts: string[]|ByNamesOptions) {
+  get_by_names(opts: string[]|ByNamesOptions) : Promise<Entity[]|string[]> {
     let options : any = { params: {} }
     if (opts instanceof Array) {
       options.params.name = opts
@@ -283,7 +287,7 @@ export class Client {
   /**
    * @see http://clusto-apiserver.readthedocs.org/clustoapi/all.html#clustoapi.server.get_by_attr
    */
-  get_by_attr(opts: string|ByAttrOptions) {
+  get_by_attr(opts: string|ByAttrOptions) : Promise<Entity[]|string[]> {
     let options : any = { params: {} }
     if (typeof opts === 'string') {
       options.params.key = opts
@@ -311,7 +315,7 @@ export class Client {
     /**
      * @see http://clusto-apiserver.readthedocs.org/clustoapi/apps/all.html#clustoapi.apps.attribute.attrs
      */
-    get(opts: string|AttributeGetOptions) {
+    get(opts: string|AttributeGetOptions) : Promise<Attribute[]> {
       let path = new URI()
       if (typeof opts === 'string') {
         path.segment(opts) /* name */
@@ -572,23 +576,23 @@ export class Client {
      Internal helpers
      ---------------------------------------- */
 
-  _get(path: string, options?: any) : any {
+  _get(path: string, options?: any) : Promise<any> {
     return this._request('GET', path, options)
   }
 
-  _delete(path: string, options?: any) : any {
+  _delete(path: string, options?: any) : Promise<any> {
     return this._request('DELETE', path, options)
   }
 
-  _post(path: string, options?: any) : any {
+  _post(path: string, options?: any) : Promise<any> {
     return this._request('POST', path, options)
   }
 
-  _put(path: string, options?: any) : any {
+  _put(path: string, options?: any) : Promise<any> {
     return this._request('PUT', path, options)
   }
 
-  _request(method: string, path: string, options?: any) : any /* Promise */ {
+  _request(method: string, path: string, options?: any) : Promise<any> {
     // Build request URL
     let url = this.base_url
 

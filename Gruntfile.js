@@ -67,6 +67,12 @@ module.exports = function(grunt) {
       }
     },
 
+    clean: {
+      files: [
+        '_build'
+      ]
+    },
+
     /**
      * Create a bundle of the library and dependencies for in-browser
      * testing.
@@ -91,6 +97,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-watch')
   grunt.loadNpmTasks('grunt-contrib-copy')
   grunt.loadNpmTasks('grunt-contrib-uglify')
+  grunt.loadNpmTasks('grunt-contrib-clean')
   grunt.loadNpmTasks('grunt-babel')
   grunt.loadNpmTasks('grunt-browserify')
   grunt.loadNpmTasks('grunt-ts-1.5')
