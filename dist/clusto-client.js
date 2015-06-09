@@ -61,7 +61,7 @@ var Client = (function () {
              * @see http://clusto-apiserver.readthedocs.org/clustoapi/apps/all.html#clustoapi.apps.attribute.attrs
              */
             get: function get(opts) {
-                var path = new URI();
+                var path = new URI('');
                 if (typeof opts === 'string') {
                     path.segment(opts); /* name */
                 } else {
@@ -109,7 +109,7 @@ var Client = (function () {
              * @see http://clusto-apiserver.readthedocs.org/clustoapi/apps/all.html#clustoapi.apps.attribute.set_attr
              */
             set: function set(opts) {
-                var path = new URI().segment(opts.name).segment(opts.key);
+                var path = new URI('').segment(opts.name).segment(opts.key);
                 if (opts.subkey) {
                     path.segment(opts.subkey);
                 }
@@ -131,7 +131,7 @@ var Client = (function () {
              * @see http://clusto-apiserver.readthedocs.org/clustoapi/apps/all.html#clustoapi.apps.attribute.del_attrs
              */
             'delete': function _delete(opts) {
-                var path = new URI().segment(opts.name).segment(opts.key);
+                var path = new URI('').segment(opts.name).segment(opts.key);
                 if (opts.subkey) {
                     path.segment(opts.subkey);
                 }
@@ -154,7 +154,7 @@ var Client = (function () {
              * @see http://clusto-apiserver.readthedocs.org/clustoapi/apps/all.html#clustoapi.apps.entity.show
              */
             get: function get(opts) {
-                var path = new URI();
+                var path = new URI('');
                 var options = typeof opts === 'string' ? { driver: opts } : opts || {};
                 if (options.driver) {
                     path.segment(options.driver);
@@ -212,7 +212,7 @@ var Client = (function () {
              * @see http://clusto-apiserver.readthedocs.org/clustoapi/apps/all.html#clustoapi.apps.entity.delete
              */
             'delete': function _delete(opts) {
-                var path = new URI().segment(opts.driver).segment(opts.name);
+                var path = new URI('').segment(opts.driver).segment(opts.name);
                 return this._delete(path.toString(), {
                     app: this.app
                 });
@@ -229,7 +229,7 @@ var Client = (function () {
              * @see http://clusto-apiserver.readthedocs.org/clustoapi/apps/all.html#clustoapi.apps.resourcemanager.show
              */
             get: function get(opts) {
-                var path = new URI();
+                var path = new URI('');
                 var options = typeof opts === 'string' ? { driver: opts } : opts || {};
                 if (options.driver) {
                     path.segment(options.driver);
@@ -305,7 +305,7 @@ var Client = (function () {
              * @see http://clusto-apiserver.readthedocs.org/clustoapi/apps/all.html#clustoapi.apps.resourcemanager.deallocate
              */
             deallocate: function deallocate(opts) {
-                var path = new URI().segment(opts.driver).segment(opts.manager);
+                var path = new URI('').segment(opts.driver).segment(opts.manager);
                 return this._delete(path.toString(), {
                     app: this.app
                 });

@@ -312,7 +312,7 @@ export class Client {
      * @see http://clusto-apiserver.readthedocs.org/clustoapi/apps/all.html#clustoapi.apps.attribute.attrs
      */
     get(opts: string|AttributeGetOptions) {
-      let path = new URI()
+      let path = new URI('')
       if (typeof opts === 'string') {
         path.segment(opts) /* name */
       } else {
@@ -362,7 +362,7 @@ export class Client {
      * @see http://clusto-apiserver.readthedocs.org/clustoapi/apps/all.html#clustoapi.apps.attribute.set_attr
      */
     set(opts: AttributeSetOptions) {
-      let path = new URI()
+      let path = new URI('')
         .segment(opts.name)
         .segment(opts.key)
       if (opts.subkey) {
@@ -387,7 +387,7 @@ export class Client {
      * @see http://clusto-apiserver.readthedocs.org/clustoapi/apps/all.html#clustoapi.apps.attribute.del_attrs
      */
     delete(opts: AttributeDeleteOptions) {
-      let path = new URI()
+      let path = new URI('')
         .segment(opts.name)
         .segment(opts.key)
       if (opts.subkey) {
@@ -416,7 +416,7 @@ export class Client {
      * @see http://clusto-apiserver.readthedocs.org/clustoapi/apps/all.html#clustoapi.apps.entity.show
      */
     get(opts?: string|EntityGetOptions) {
-      let path = new URI()
+      let path = new URI('')
       let options : EntityGetOptions = (typeof opts === 'string') ? { driver: opts } : opts || {}
       if (options.driver) {
         path.segment(options.driver)
@@ -478,7 +478,7 @@ export class Client {
      * @see http://clusto-apiserver.readthedocs.org/clustoapi/apps/all.html#clustoapi.apps.entity.delete
      */
     delete(opts: EntityDeleteOptions) {
-      let path = new URI()
+      let path = new URI('')
         .segment(opts.driver)
         .segment(opts.name)
       return this._delete(path.toString(), {
@@ -501,7 +501,7 @@ export class Client {
      * @see http://clusto-apiserver.readthedocs.org/clustoapi/apps/all.html#clustoapi.apps.resourcemanager.show
      */
     get(opts?: string|ResourceGetOptions) {
-      let path = new URI()
+      let path = new URI('')
       let options : ResourceGetOptions = (typeof opts === 'string') ? { driver: opts } : opts || {}
       if (options.driver) {
         path.segment(options.driver)
@@ -559,7 +559,7 @@ export class Client {
      * @see http://clusto-apiserver.readthedocs.org/clustoapi/apps/all.html#clustoapi.apps.resourcemanager.deallocate
      */
     deallocate(opts: ResourceDeleteOptions) {
-      let path = new URI()
+      let path = new URI('')
         .segment(opts.driver)
         .segment(opts.manager)
       return this._delete(path.toString(), {
