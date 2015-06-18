@@ -182,9 +182,9 @@ export class Client {
    * Initialize the client, setting up the map of clusto application
    * mount points (base URL paths).
    *
-   * @returns Promise
+   * @returns Promise<Client>
    */
-  init() : any {
+  init() : Promise<Client> {
     return this.get_meta()
       .then(data => {
         this.mount_points.clear()
@@ -192,6 +192,7 @@ export class Client {
           let app = data[mount]
           this.mount_points.set(app, mount)
         }
+        return this
       })
   }
 
