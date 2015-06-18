@@ -293,6 +293,9 @@ export class Client {
       if (opts.subkey) {
         options.params.subkey = opts.subkey
       }
+      if (opts.mode) {
+        options.mode = opts.mode
+      }
       if (opts.value) {
         options.params.value = opts.value
       }
