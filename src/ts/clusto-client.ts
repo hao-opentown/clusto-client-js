@@ -1,8 +1,9 @@
 declare var require
 
-const request     = require('superagent')
-const URI         = require('URIjs')
-const Promise     = require('bluebird')
+const request = require('superagent')
+const URI     = require('URIjs')
+const Promise = require('bluebird')
+const qs      = require('qs')
 
 /* -----------------------------------------------------------------------------
    API Constants
@@ -618,7 +619,7 @@ export class Client {
 
     // Query string
     if ((method ==='GET') && options && options.params) {
-      req.query(options.params)
+      req.query(qs.stringify(options.params, { indices: false }))
     }
 
     if ((method === 'POST' || method === 'PUT') && options && options.params) {
