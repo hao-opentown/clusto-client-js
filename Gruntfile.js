@@ -84,16 +84,21 @@ module.exports = function(grunt) {
         files: SOURCE_FILES,
         tasks: ['lib']
       }
-    }
+    },
+
+    clean: [
+      'dist', '_build'
+    ]
 
   })
 
   grunt.loadNpmTasks('grunt-contrib-watch')
   grunt.loadNpmTasks('grunt-contrib-copy')
+  grunt.loadNpmTasks('grunt-contrib-clean')
   grunt.loadNpmTasks('grunt-contrib-uglify')
   grunt.loadNpmTasks('grunt-babel')
   grunt.loadNpmTasks('grunt-browserify')
-  grunt.loadNpmTasks('grunt-ts-1.5')
+  grunt.loadNpmTasks('grunt-ts')
 
   grunt.registerTask('lib', [
     'ts', 'babel'

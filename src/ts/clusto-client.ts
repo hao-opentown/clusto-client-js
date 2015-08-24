@@ -171,6 +171,16 @@ export class Client {
         if (data.base_url) {
           this._base_url = new URI(data.base_url)
         }
+        if (data.mount_points) {
+          if (Array.isArray(data.mount_points)) {
+            this.mount_points = new Map<string, string>(data.mount_points)
+          } else {
+            for (let key of Object.keys(data.mount_points)) {
+              this.mount_points.set(key, data.mount_points[key])
+            }
+          }
+        }
+
       }
     }
   }
