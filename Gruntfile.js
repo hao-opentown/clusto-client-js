@@ -47,10 +47,10 @@ module.exports = function(grunt) {
       dist: {
         options: {
           sourceMap: true,
-          sourceMapIn: '_build/es5/clusto-client.js.map'
+          sourceMapIn: '_build/es5/index.js.map'
         },
         files: {
-          'dist/clusto-client.min.js' : '_build/es5/clusto-client.js'
+          'dist/index.min.js' : '_build/es5/index.js'
         }
       }
     },
@@ -61,8 +61,8 @@ module.exports = function(grunt) {
     copy: {
       dist: {
         files: [
-          { expand: true, flatten: true, cwd: '_build/es5/', src: 'clusto-client.js*', dest: 'dist/' },
-          { expand: true, flatten: true, cwd: '_build/es6/', src: 'clusto-client.d.ts', dest: 'dist/' }
+          { expand: true, flatten: true, cwd: '_build/es5/', src: 'index.js*', dest: 'dist/' },
+          { expand: true, flatten: true, cwd: '_build/es6/', src: 'index.d.ts', dest: 'dist/' }
         ]
       }
     },
@@ -74,7 +74,7 @@ module.exports = function(grunt) {
     browserify: {
       bundle: {
         files: {
-          '_build/bundle.js' : [ '_build/es5/clusto-client.js' ]
+          '_build/bundle.js' : [ '_build/es5/index.js' ]
         }
       }
     },
