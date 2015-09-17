@@ -1,8 +1,9 @@
 {
   "name": "clusto-client",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "A Javascript client for Clusto API, implemented in TypeScript. ",
   "main": "dist/index.js",
+  "typings" : "dist/index.d.ts",
   "repository": {
     "type": "git",
     "url": "https://github.com/aalpern/clusto-client-js"
