@@ -28,7 +28,8 @@
     "grunt-contrib-copy": "^0.8.0",
     "grunt-contrib-uglify": "^0.9.1",
     "grunt-contrib-watch": "^0.6.1",
-    "grunt-ts": "^4.2.0"
+    "grunt-ts": "^4.2.0",
+    "typescript": "^1.6.2"
   },
   "dependencies": {
     "URIjs": "^1.15.1",
