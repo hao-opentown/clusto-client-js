@@ -42,40 +42,31 @@ module.exports = function(grunt) {
     },
 
     /**
+     * Create a bundle of the library and dependencies for in-browser
+     * testing.
+     */
+    
+      // 3 - Bundle the ES5 sources to a single file, exlucding 3rd
+      // party dependencies
+      browserify: {
+        files: {
+          '_build/bundle.js' : [ '_build/es5/**/*.js' ]
+        },
+        options: {
+          exclude: [ 'hyperquest', 'querystring', 'URIjs', 'bluebird' ]
+        }
+      }
+
+    /**
      * Create a minified version for distribution.
      */
     uglify: {
       dist: {
         options: {
-          sourceMap: true,
-          sourceMapIn: '_build/es5/index.js.map'
+          sourceMap: true
         },
         files: {
-          'dist/index.min.js' : '_build/es5/index.js'
-        }
-      }
-    },
-
-    /**
-     * Copy the non-minified lib and sourceMap into the dist/ folder.
-     */
-    copy: {
-      dist: {
-        files: [
-          { expand: true, flatten: true, cwd: '_build/es5/', src: 'index.js*', dest: 'dist/' },
-          { expand: true, flatten: true, cwd: '_build/es6/', src: 'index.d.ts', dest: 'dist/' }
-        ]
-      }
-    },
-
-    /**
-     * Create a bundle of the library and dependencies for in-browser
-     * testing.
-     */
-    browserify: {
-      bundle: {
-        files: {
-          '_build/bundle.js' : [ '_build/es5/index.js' ]
+          'dist/bundle.min.js' : '_build/bundle.js'
         }
       }
     },
@@ -106,7 +97,7 @@ module.exports = function(grunt) {
   ])
 
   grunt.registerTask('dist', [
-    'lib', 'uglify:dist', 'copy:dist'
+    'lib', 'browserify', 'uglify:dist' 
   ])
 
   grunt.registerTask('default', [
