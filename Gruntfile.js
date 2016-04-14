@@ -46,9 +46,10 @@ module.exports = function(grunt) {
      * testing.
      */
     
-      // 3 - Bundle the ES5 sources to a single file, exlucding 3rd
-      // party dependencies
-      browserify: {
+    // 3 - Bundle the ES5 sources to a single file, exlucding 3rd
+    // party dependencies
+    browserify: {
+      bundle : {
         files: {
           '_build/bundle.js' : [ '_build/es5/**/*.js' ]
         },
@@ -56,6 +57,7 @@ module.exports = function(grunt) {
           exclude: [ 'hyperquest', 'querystring', 'URIjs', 'bluebird' ]
         }
       }
+    },
 
     /**
      * Create a minified version for distribution.
@@ -97,7 +99,7 @@ module.exports = function(grunt) {
   ])
 
   grunt.registerTask('dist', [
-    'lib', 'browserify', 'uglify:dist' 
+    'lib', 'browserify:bundle', 'uglify:dist' 
   ])
 
   grunt.registerTask('default', [
